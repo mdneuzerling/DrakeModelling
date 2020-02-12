@@ -6,7 +6,8 @@ test_reviews <- tibble::tribble(
   ~review,
   "This movie is good fun and everyone should see it. Great film.",
   "What a poor quality phone",
-  "This phone has a great battery"
+  "This phone has a great battery phone",
+  "An excellent piece of software"
 )
 
 test_vocabulary <- create_vocabulary(test_reviews$review)
