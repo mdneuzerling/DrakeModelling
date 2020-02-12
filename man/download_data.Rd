@@ -2,7 +2,7 @@
 % Please edit documentation in R/download-data.R
 \name{download_data}
 \alias{download_data}
-\title{Download and uncompress a zipped data file}
+\title{Download and uncompress review data}
 \usage{
 download_data(save_location = getwd())
 }

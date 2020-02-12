@@ -1,4 +1,4 @@
-#' Download and uncompress a zipped data file
+#' Download and uncompress review data
 #'
 #' Given the URL of a .zip file, this function will download it and decompress
 #' it to a given location.
@@ -23,14 +23,9 @@ download_data <- function(save_location = getwd()) {
   on.exit(unlink(zip_file))
   utils::download.file(data_source_url, zip_file)
 
-  if (!dir.exists(save_location)) {
-      dir.create(save_location, recursive = TRUE)
-  }
+  dir.create(save_location, showWarnings = FALSE, recursive = TRUE)
 
-  data_files <- file.path("sentiment labelled sentences",
-                          c("amazon_cells_labelled.txt",
-                            "imdb_labelled.txt",
-                            "yelp_labelled.txt"))
+  data_files <- file.path("sentiment labelled sentences", data_files())
 
   utils::unzip(zip_file, files = data_files, junkpaths = TRUE, exdir = save_location)
 }
