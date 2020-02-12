@@ -1,0 +1,12 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+inst/doc
+inst/extdata
+inst/eda/*.html
+data
+vignettes/*.html
+vignettes/*.pdf
+doc
+Meta

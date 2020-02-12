@@ -1,0 +1,38 @@
+Package: DrakeModelling
+Type: Package
+Title: Using drake to Train and Execute a Model in a Custom Package
+Version: 0.1.0
+Author: David Neuzerling (@mdneuzerling)
+Maintainer: David Neuzerling <mdneuzerling@email.hidden>
+Description: Drake is excellent for doing complicated things like model training or execution. I want to combine that with the benefits of custom R packages.
+Depends: 
+    R (>= 3.4.0)
+Imports:
+    dplyr,
+    readr,
+    text2vec,
+    tm,
+    tidytext,
+    SnowballC,
+    randomForest,
+    drake
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.0.2
+Suggests:
+    devtools,
+    ggplot2,
+    naniar,
+    purrr,
+    usethis,
+    withr,
+    wordcloud,
+    knitr,
+    rmarkdown,
+    assertthat,
+    tibble,
+    testthat (>= 2.1.0)
+VignetteBuilder: knitr
+URL: https://github.com/mdneuzerling/DrakeModelling
+BugReports: https://github.com/mdneuzerling/DrakeModelling/issues

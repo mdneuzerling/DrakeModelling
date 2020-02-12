@@ -1,0 +1,118 @@
+---
+title: "Exploratory data analysis"
+author: "David Neuzerling"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r load_package, include = FALSE}
+library(tidyverse)
+package_root <- dirname(getwd())
+devtools::load_all(package_root)
+```
+
+```{r working-directories}
+here::here()
+getwd()
+package_root
+```
+
+# Data load
+
+I haven't kept the data in this git repository, opting instead to download it if it doesn't already exist. It's a fairly small data set though (3000 rows).
+
+`download_data` is a package function that downloads and unzips the source data into the `inst/extdata` directory (creating it if necessary). On package compilation, everything in the `inst` folder is moved up to the root directory of the package, and so we can find the `extdata` directory in the finished product.
+
+```{r download-data}
+extdata <- file.path(package_root, "inst", "extdata")
+data_files <- c("amazon_cells_labelled.txt",
+                "imdb_labelled.txt",
+                "yelp_labelled.txt") %>% file.path(extdata, .)
+if (!all(file.exists(data_files))) {
+  download_data(extdata)
+}
+```
+
+Data is loaded in with another custom function, `read_review_file`. This is just `readr::read_tsv` with some special options to cover the pecularities of the raw data. All of these custom functions are documented and stored in the `R` directory. Once the package is installed, function manuals can be called in the usual way (eg. `?read_review_file`).
+
+This is a simple analysis, so let's just stick to discrete categories for sentiment: "good" and "bad". I don't care too much about how the model performs, as long as it functions.
+
+```{r load-data}
+reviews <- data_files %>% 
+  purrr::map(read_review_file) %>%
+  purrr::reduce(rbind) %>% 
+  mutate(sentiment = ifelse(sentiment == 1, "good", "bad"))
+reviews %>% head
+```
+
+# Exploring data
+
+We check for missing data using the `naniar` package:
+
+```{r naniar}
+reviews %>% naniar::miss_var_summary()
+```
+
+Let's take a look at which words are the most frequent. First we create a data frame such that each row is an occurrence of a word. Note that we remove stop words --- these are words like "the" that are common and usually provide little semantic content to the text.
+
+```{r words}
+words <- reviews %>% 
+  tidytext::unnest_tokens(
+    word, 
+    review
+  ) %>% 
+  anti_join(
+    tidytext::stop_words, 
+    by = "word"
+  )
+words %>% head
+```
+
+Now we'll plot the mosst frequently occurring words, keeping a note of which words are "good" and which words are "bad".
+
+```{r word_frequency, fig.width = 6, fig.height = 6, out.height = 600, out.width = 600}
+words %>%
+  count(word, sentiment, sort = TRUE) %>%
+  head(20) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(word, n, fill = sentiment)) +
+  geom_col() +
+  xlab(NULL) +
+  theme(text = element_text(size = 16)) +
+  coord_flip() +
+  ggtitle("Frequency of words")
+```
+
+There are no surprises here! "Bad" is universally bad and "love" is universally good. It's comforting to see. We'll note this and use these words in our unit tests.
+
+I'm not sure what purpose word clouds serve, but they seem almost mandatory.
+
+```{r word_cloud, fig.width = 6, fig.height = 6, out.height = 600, out.width = 600}
+words %>%
+  count(word) %>%
+  with(
+    wordcloud::wordcloud(
+      word, 
+      n, 
+      max.words = 100
+    )
+  )
+```
+
+
+# Preprocessing
+
+We need to apply some preprocessing to our text before we can feed it into a model. The first round of preprocessing is simply ignoring case, punctuation and numbers:
+
+```{r text-preprocessor}
+text_preprocessor
+```
+
+I'm actually not sure that we *should* be removing numbers here. We're dealing with reviews, after all, and a review like "10/10" certainly tells us something about sentiment. But that's beyond the scope of this package.
+
+The next round of processing involves tokenising our words. This is a process of stripping words down to their base. Another custom function, `stem_tokeniser` plays this role, by calling on the Porter stemming algorithm:
+
+```{r stem-tokeniser-example}
+stem_tokeniser("information informed informing informs")
+```
+

@@ -1,0 +1,6 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^doc$
+^Meta$
+^LICENSE\.md$
+^\.github/workflows/R-CMD-check\.yaml$
