@@ -4,12 +4,14 @@
 \alias{sentiment}
 \title{Classify a review as good or bad}
 \usage{
-sentiment(x, random_forest)
+sentiment(x, random_forest, vectoriser)
 }
 \arguments{
 \item{x}{Text to be classified, ideally a one-sentence product review.}
 
 \item{random_forest}{A model created with the randomForest package.}
+
+\item{vectoriser}{A vectoriser constructed with the text2vec package.}
 }
 \description{
 Classify a review as good or bad

@@ -2,6 +2,7 @@
 #'
 #' @param x Text to be classified, ideally a one-sentence product review.
 #' @param random_forest A model created with the randomForest package.
+#' @param vectoriser A vectoriser constructed with the text2vec package.
 #'
 #' @importFrom randomForest randomForest
 #' @export
