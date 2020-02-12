@@ -11,7 +11,7 @@ test_reviews <- tibble::tribble(
 
 test_vocabulary <- create_vocabulary(test_reviews$review)
 test_vectoriser <- test_vocabulary %>% text2vec::vocab_vectorizer()
-test_dtm_unweighted <- map_to_dtm(test_reviews,
+test_dtm_unweighted <- map_to_dtm(test_reviews$review,
                                   vectoriser = test_vectoriser,
                                   tfidf = NULL)
 test_tfidf <- text2vec::TfIdf$new()
