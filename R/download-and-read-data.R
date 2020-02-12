@@ -7,7 +7,6 @@
 #' @return Tibble of parsed data
 #' @export
 #'
-#' @examples
 download_and_read_data <- function(save_location = NULL) {
 
   if (is.null(save_location)) {
