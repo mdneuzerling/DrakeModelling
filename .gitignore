@@ -2,6 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
+.drake
 inst/doc
 inst/extdata
 inst/eda/*.html
