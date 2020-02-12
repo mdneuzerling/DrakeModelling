@@ -7,14 +7,8 @@ output: html_document
 
 ```{r load_package, include = FALSE}
 library(tidyverse)
-package_root <- dirname(getwd())
+package_root <- here::here()
 devtools::load_all(package_root)
-```
-
-```{r working-directories}
-here::here()
-getwd()
-package_root
 ```
 
 # Data load
