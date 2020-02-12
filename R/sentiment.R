@@ -6,7 +6,7 @@
 #' @importFrom randomForest randomForest
 #' @export
 #'
-sentiment <- function(x, random_forest) {
-  processed <- map_to_dtm(x)
+sentiment <- function(x, random_forest, vectoriser) {
+  processed <- map_to_dtm(x, vectoriser = vectoriser)
   as.character(stats::predict(random_forest, processed))
 }
