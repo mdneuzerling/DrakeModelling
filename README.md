@@ -14,7 +14,7 @@ A machine learning model might consist of three major components:
 2) Model training
 3) Model execution
 
-These components are **independent**. EDA is a largely human task, and is usually only performed when the model is created or updated in some major way. The other two components need not operate together --- if model retraining is expensive, or new training data is infrequently available, we might retrain a model on some monthly basis while scoring new data on a daily basis.
+These components are created sequentially, but in practice they are **run independently of each other**. EDA is a largely human task, and is usually only performed when the model is created or updated in some major way. The other two components need not operate together --- if model retraining is expensive, or new training data is infrequently available, we might retrain a model on some monthly basis while scoring new data on a daily basis.
 
 This repository attempts to piece together a machine learning model that implements these three components using R-specific tools:
 
