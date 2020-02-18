@@ -10,8 +10,7 @@
 download_and_read_data <- function(save_location = NULL) {
 
   if (is.null(save_location)) {
-    save_location <- tempdir()
-    on.exit(unlink(save_location))
+    save_location <- file.path(here::here(), "inst", "extdata")
   }
 
   dir.create(save_location, showWarnings = FALSE)
