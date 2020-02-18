@@ -30,6 +30,8 @@ I intend for this repository to serve as a template for my future machine learni
 
 This template uses a simple random forest sentiment analysis model, based on [labelled data available from the UCI machine learning repository](https://archive.ics.uci.edu/ml/datasets/Sentiment+Labelled+Sentences). Data is not stored in the repository, but is downloaded to the `extdata` directory of the project locally, and only when needed.
 
+This template considers machine learning workflows intended to be executed in batch --- for models that run as APIs, consider using `plumber`.
+
 ## Training and execution
 
 After cloning the repo, navigate to the directory in which the files are located. The easiest way to do this is to open the project in RStudio.
@@ -53,6 +55,8 @@ drake::make(model_execution_plan())
 ![](drake-model-execution-plan.png)
 
 Model artefacts --- the random forest model, the vectoriser, and the tfidf weightings --- are saved to and loaded from the `inst/artefacts/` directory. This is an arbitrary choice. We could just as easily use a different directory or remote storage.
+
+Predictions are "submitted" through the `submit_prediction()` function. This function does nothing except sleep for 5 seconds. In practice we would submit model output wherever it needs to go --- locally, a cloud service, etc.
 
 The exploratory data analysis piece can be found in the `inst/eda/` directory. It is compiled with `knitr`.
 
