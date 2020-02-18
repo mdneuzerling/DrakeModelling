@@ -43,7 +43,7 @@ devtools::load_all()
 drake::make(model_training_plan())
 ```
 
-![](drake-model-training-plan.png)
+![](inst/img/drake-model-training-plan.png)
 
 Model execution is run similarly:
 
@@ -52,7 +52,7 @@ devtools::load_all()
 drake::make(model_execution_plan())
 ```
 
-![](drake-model-execution-plan.png)
+![](inst/img/drake-model-execution-plan.png)
 
 Model artefacts --- the random forest model, the vectoriser, and the tfidf weightings --- are saved to and loaded from the `inst/artefacts/` directory. This is an arbitrary choice. We could just as easily use a different directory or remote storage.
 
