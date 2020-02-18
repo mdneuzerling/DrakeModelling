@@ -8,9 +8,8 @@
 #' @return Data frame with two char columns: review and sentiment ("good"/"bad")
 #' @export
 #'
-#' @examples
 new_data_to_be_scored <- function() {
-  tribble(
+  tibble::tribble(
     ~"review", ~"sentiment",
     "I'm still infatuated with this phone.", "good",
     "Strike 2, who wants to be rushed.", "bad",

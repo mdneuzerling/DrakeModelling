@@ -5,3 +5,6 @@
 ^LICENSE\.md$
 ^\.github/workflows/R-CMD-check\.yaml$
 ^.drake$
+^inst/artefacts$
+^drake-model-training-plan\.png$
+^drake-model-execution-plan\.png$

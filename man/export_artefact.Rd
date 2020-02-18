@@ -13,7 +13,7 @@ export_artefact(artefact, name = NULL)
 attempt to save as "artefact.rds", although this will fail for piped objects.}
 }
 \value{
-Returns the artefact, invisibly.readr:
+Returns the artefact, invisibly.
 }
 \description{
 A model artefact could be a model itself, or an object used in preprocessing

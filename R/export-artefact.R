@@ -9,7 +9,7 @@
 #' @param name File name to use, without the directory. If not provided, will
 #' attempt to save as "artefact.rds", although this will fail for piped objects.
 #'
-#' @return Returns the artefact, invisibly.readr:
+#' @return Returns the artefact, invisibly.
 #' @export
 #'
 export_artefact <- function(artefact, name = NULL) {

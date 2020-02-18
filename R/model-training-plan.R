@@ -5,7 +5,7 @@
 #' @export
 #'
 model_training_plan <- function() {
-  plan <- drake::drake_plan(
+  drake::drake_plan(
     reviews = download_and_read_data(),
     vocabulary = create_vocabulary(reviews$review,
                                    doc_proportion_min = 25 / nrow(reviews)),
