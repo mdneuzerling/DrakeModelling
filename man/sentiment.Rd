@@ -4,7 +4,7 @@
 \alias{sentiment}
 \title{Classify a review as good or bad}
 \usage{
-sentiment(x, random_forest, vectoriser)
+sentiment(x, random_forest, vectoriser, tfidf = NULL)
 }
 \arguments{
 \item{x}{Text to be classified, ideally a one-sentence product review.}
@@ -12,6 +12,9 @@ sentiment(x, random_forest, vectoriser)
 \item{random_forest}{A model created with the randomForest package.}
 
 \item{vectoriser}{A vectoriser constructed with the text2vec package.}
+
+\item{tfidf}{A tfidf object constructed with the text2vec package.
+If no tfidf is NULL, then weighting will not be applied.}
 }
 \description{
 Classify a review as good or bad

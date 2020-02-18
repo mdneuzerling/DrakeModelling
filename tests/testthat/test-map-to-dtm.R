@@ -15,8 +15,7 @@ test_vectoriser <- test_vocabulary %>% text2vec::vocab_vectorizer()
 test_dtm_unweighted <- map_to_dtm(test_reviews$review,
                                   vectoriser = test_vectoriser,
                                   tfidf = NULL)
-test_tfidf <- text2vec::TfIdf$new()
-test_tfidf$fit_transform(test_dtm_unweighted)
+test_tfidf <- create_tfidf(test_dtm_unweighted)
 
 # The dtms used for testing are below
 # Note that "movie" stems to "movi".

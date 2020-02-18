@@ -16,7 +16,9 @@ Imports:
     SnowballC,
     randomForest,
     assertthat,
-    drake
+    drake,
+    here,
+    digest
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -32,7 +34,6 @@ Suggests:
     knitr,
     rmarkdown,
     tibble,
-    here,
     testthat (>= 2.1.0)
 VignetteBuilder: knitr
 URL: https://github.com/mdneuzerling/DrakeModelling

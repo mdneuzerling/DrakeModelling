@@ -5,6 +5,7 @@
 .drake
 inst/doc
 inst/extdata
+inst/artefacts
 inst/eda/*.html
 data
 vignettes/*.html
