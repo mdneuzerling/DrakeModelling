@@ -5,6 +5,7 @@
 #' created, as well as any missing parent directories.
 #'
 #' @return Tibble of parsed data
+#' @importFrom rlang .data
 #' @export
 #'
 download_and_read_data <- function(save_location = NULL) {
@@ -24,6 +25,6 @@ download_and_read_data <- function(save_location = NULL) {
   data_files %>% 
     purrr::map(read_review_file) %>%
     purrr::reduce(rbind) %>% 
-    dplyr::mutate(sentiment = ifelse(sentiment == 1, "good", "bad"))
+    dplyr::mutate(sentiment = ifelse(.data$sentiment == 1, "good", "bad"))
   
 }

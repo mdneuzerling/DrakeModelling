@@ -18,7 +18,8 @@ Imports:
     assertthat,
     drake,
     here,
-    digest
+    digest,
+    rlang
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
