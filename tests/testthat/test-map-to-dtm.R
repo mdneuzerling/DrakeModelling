@@ -39,7 +39,7 @@ test_that("DTM has common words that aren't stop words", {
 })
 
 test_that("DTM doesn't contain common stop words", {
-  expect_false("the" %in% colnames(dtm_unweighted))
+  expect_false("this" %in% colnames(dtm_unweighted))
   expect_false("a" %in% colnames(dtm_unweighted))
 })
 
