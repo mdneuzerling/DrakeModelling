@@ -13,8 +13,10 @@ model_execution_plan <- function() {
                             random_forest = review_rf,
                             vectoriser = vectoriser,
                             tfidf = tfidf),
-    validation_hash = validate_predictions(predictions),
-    submit_predictions = target(submit_predictions(predictions),
-                                trigger = trigger(change = validation_hash))
+    validation = validate_predictions(predictions),
+    submit_predictions = target(
+      submit_predictions(predictions),
+      trigger = trigger(condition = validation, mode = "blacklist")
+    )
   )
 }

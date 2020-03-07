@@ -21,12 +21,18 @@ model_training_plan <- function() {
       y = factor(reviews$sentiment),
       ntree = 500
     ),
-    validation_hash = validate_model(review_rf, vectoriser, tfidf),
-    export_tfidf = target(export_artefact(tfidf),
-                          trigger = trigger(change = validation_hash)),
-    export_vectoriser = target(export_artefact(vectoriser),
-                               trigger = trigger(change = validation_hash)),
-    export_model = target(export_artefact(review_rf),
-                             trigger = trigger(change = validation_hash))
+    validation = validate_model(review_rf, vectoriser, tfidf),
+    export_tfidf = target(
+      export_artefact(tfidf),
+      trigger = trigger(condition = validation, mode = "blacklist")
+    ),
+    export_vectoriser = target(
+      export_artefact(vectoriser),
+      trigger = trigger(condition = validation, mode = "blacklist")
+    ),
+    export_model = target(
+      export_artefact(review_rf),
+      trigger = trigger(condition = validation, mode = "blacklist")
+    )
   )
 }
