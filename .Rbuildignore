@@ -7,3 +7,4 @@
 ^.drake$
 ^inst/artefacts$
 ^inst/img$
+^artefacts$

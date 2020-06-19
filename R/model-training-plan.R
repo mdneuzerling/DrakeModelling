@@ -6,7 +6,11 @@
 #'
 model_training_plan <- function() {
   drake::drake_plan(
-    reviews = download_and_read_data(),
+    reviews = target(
+      download_and_read_data(
+        file_in("https://archive.ics.uci.edu/ml/machine-learning-databases/00331/sentiment%20labelled%20sentences.zip")
+      )
+    ),
     vocabulary = create_vocabulary(reviews$review,
                                    doc_proportion_min = 25 / nrow(reviews)),
     vectoriser = text2vec::vocab_vectorizer(vocabulary),
@@ -21,18 +25,11 @@ model_training_plan <- function() {
       y = factor(reviews$sentiment),
       ntree = 500
     ),
-    validation = validate_model(review_rf, vectoriser, tfidf),
-    export_tfidf = target(
-      export_artefact(tfidf),
-      trigger = trigger(condition = validation, mode = "blacklist")
-    ),
-    export_vectoriser = target(
-      export_artefact(vectoriser),
-      trigger = trigger(condition = validation, mode = "blacklist")
-    ),
-    export_model = target(
-      export_artefact(review_rf),
-      trigger = trigger(condition = validation, mode = "blacklist")
-    )
+    output_model = {
+      dir.create("artefacts", showWarnings = FALSE)
+      readr::write_rds(vectoriser, file_out("artefacts/vectoriser.rds"))
+      readr::write_rds(tfidf, file_out("artefacts/tfidf.rds"))
+      readr::write_rds(review_rf, file_out("artefacts/review_rf.rds"))
+    }
   )
 }

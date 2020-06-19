@@ -1,30 +1,38 @@
-#' Download and read review data
+#' Download and parse review data
 #'
-#' @param save_location character. The contents of the downloaded zip file will
-#' be uncompressed and saved here. If save_location does not exist, it will be
-#' created, as well as any missing parent directories.
+#' Given the URL of a .zip file, this function will download it and decompress
+#' it to a given location.
+#'
+#' This function was intended to download and uncompress the data located at
+#' https://archive.ics.uci.edu/ml/datasets/Sentiment+Labelled+Sentences
+#' It is not a general function to download arbitrary data, but may be a
+#' useful template.
+#'
+#' @param data_source_url Character.
 #'
 #' @return Tibble of parsed data
 #' @importFrom rlang .data
 #' @export
 #'
-download_and_read_data <- function(save_location = NULL) {
-
-  if (is.null(save_location)) {
-    save_location <- file.path(here::here(), "inst", "extdata")
-  }
-
-  dir.create(save_location, showWarnings = FALSE)
+download_and_read_data <- function(data_source_url) {
+  temp_dir <- tempdir()
   
-  data_files <- file.path(save_location, data_files())
+  zip_file <- file.path(temp_dir, "zip_file")
+  on.exit(unlink(zip_file, recursive = TRUE))
+  utils::download.file(data_source_url, zip_file)
+  data_files <-c("amazon_cells_labelled.txt",
+                 "imdb_labelled.txt",
+                 "yelp_labelled.txt")
+  data_files_in_zip <- file.path("sentiment labelled sentences", data_files)
+  utils::unzip(
+    zip_file, files = data_files_in_zip, junkpaths = TRUE, exdir = temp_dir
+  )
+  downloaded_data_files <- file.path(temp_dir, data_files)
+  on.exit(unlink(downloaded_data_files), add = TRUE)
   
-  if (any(!file.exists(data_files))) {
-    download_data(save_location = save_location)
-  }
-
-  data_files %>% 
+  downloaded_data_files %>%
     purrr::map(read_review_file) %>%
-    purrr::reduce(rbind) %>% 
+    purrr::reduce(rbind) %>%
     dplyr::mutate(sentiment = ifelse(.data$sentiment == 1, "good", "bad"))
   
 }

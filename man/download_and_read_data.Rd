@@ -2,18 +2,23 @@
 % Please edit documentation in R/download-and-read-data.R
 \name{download_and_read_data}
 \alias{download_and_read_data}
-\title{Download and read review data}
+\title{Download and parse review data}
 \usage{
-download_and_read_data(save_location = NULL)
+download_and_read_data(data_source_url)
 }
 \arguments{
-\item{save_location}{character. The contents of the downloaded zip file will
-be uncompressed and saved here. If save_location does not exist, it will be
-created, as well as any missing parent directories.}
+\item{data_source_url}{Character.}
 }
 \value{
 Tibble of parsed data
 }
 \description{
-Download and read review data
+Given the URL of a .zip file, this function will download it and decompress
+it to a given location.
+}
+\details{
+This function was intended to download and uncompress the data located at
+https://archive.ics.uci.edu/ml/datasets/Sentiment+Labelled+Sentences
+It is not a general function to download arbitrary data, but may be a
+useful template.
 }

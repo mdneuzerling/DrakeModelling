@@ -2,11 +2,7 @@
 
 export(create_tfidf)
 export(create_vocabulary)
-export(data_files)
 export(download_and_read_data)
-export(download_data)
-export(export_artefact)
-export(import_artefact)
 export(map_to_dtm)
 export(model_execution_plan)
 export(model_training_plan)

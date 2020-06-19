@@ -13,7 +13,7 @@
 #' @export
 #'
 validate_predictions <- function(predictions) {
-  assert_that(all(predictions == "good" | predictions == "bad"))
+  assertthat::assert_that(all(predictions == "good" | predictions == "bad"))
   
   return(TRUE)
 }
