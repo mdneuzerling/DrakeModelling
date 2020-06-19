@@ -28,7 +28,7 @@ R packages are the standard for complicated R projects, and machine learning mod
 
 I intend for this repository to serve as a template for my future machine learning projects.
 
-This template uses a simple random forest sentiment analysis model, based on [labelled data available from the UCI machine learning repository](https://archive.ics.uci.edu/ml/datasets/Sentiment+Labelled+Sentences). Data is not stored in the repository, but is downloaded to the `extdata` directory of the project locally, and only when needed.
+This template uses a simple random forest sentiment analysis model, based on [labelled data available from the UCI machine learning repository](https://archive.ics.uci.edu/ml/datasets/Sentiment+Labelled+Sentences). Drake takes care of the data caching for us. This means that we can, say, adjust the hyperparameters of our model and rerun the training plan, and only the modelling step and onwards will be rerun.
 
 This template considers machine learning workflows intended to be executed in batch --- for models that run as APIs, consider using `plumber`.
 
