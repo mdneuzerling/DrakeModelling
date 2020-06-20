@@ -25,11 +25,17 @@ model_training_plan <- function() {
       y = factor(reviews$sentiment),
       ntree = 500
     ),
-    output_model = {
-      dir.create("artefacts", showWarnings = FALSE)
-      readr::write_rds(vectoriser, file_out("artefacts/vectoriser.rds"))
-      readr::write_rds(tfidf, file_out("artefacts/tfidf.rds"))
-      readr::write_rds(review_rf, file_out("artefacts/review_rf.rds"))
-    }
+    validation = validate_model(review_rf, vectoriser, tfidf),
+    output_model = drake::target(
+      {
+        dir.create("artefacts", showWarnings = FALSE)
+        readr::write_rds(vectoriser, file_out("artefacts/vectoriser.rds"))
+        readr::write_rds(tfidf, file_out("artefacts/tfidf.rds"))
+        readr::write_rds(review_rf, file_out("artefacts/review_rf.rds"))
+      },
+      trigger = drake::trigger(condition = validation, mode = "blacklist")
+    )
   )
 }
+
+
