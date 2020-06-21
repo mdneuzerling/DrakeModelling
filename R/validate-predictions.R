@@ -15,5 +15,5 @@
 validate_predictions <- function(predictions) {
   assertthat::assert_that(all(predictions == "good" | predictions == "bad"))
   
-  return(TRUE)
+  TRUE
 }

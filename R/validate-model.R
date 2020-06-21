@@ -24,5 +24,5 @@ validate_model <- function(random_forest, vectoriser, tfidf = NULL) {
   assert_that(model_sentiment("bad") == "bad")
   assert_that(oob < 0.4)
 
-  return(TRUE)
+  TRUE
 }
