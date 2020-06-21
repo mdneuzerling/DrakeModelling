@@ -8,29 +8,27 @@
 
 ## Concept
 
-A machine learning model might consist of three major components:
+When it comes to code, there are three major components to a machine learning project:
 
 1) Exploratory data analysis (EDA)
 2) Model training
 3) Model execution
 
-These components are created sequentially, but in practice they are **run independently of each other**. EDA is a largely human task, and is usually only performed when the model is created or updated in some major way. The other two components need not operate together --- if model retraining is expensive, or new training data is infrequently available, we might retrain a model on some monthly basis while scoring new data on a daily basis.
+These components are run independently of each other. EDA is a largely human task, and is usually only performed when the model is created or updated in some major way. The other two components need not operate together --- if model retraining is expensive, or new training data is infrequently available, we might retrain a model on some monthly basis while scoring new data on a daily basis.
 
-This repository attempts to piece together a machine learning model that implements these three components using R-specific tools:
+I pieced together this template that implements these three components using R-specific tools:
 
 1) EDA --- **R Markdown**
 2) Model training --- **drake**
 3) Model execution --- **drake**
 
-All three of these components might use similar functions. Typically we would place all of these "helper functions" in a directory (almost always called `R/`) and `source` them as needed. Here I want to try to combine these components into a custom R package.
+All three of these components might use similar functions. Typically we would place all of these functions in a directory (almost always called `R/`) and `source` them as needed. Here I want to try to combine these components into a custom R package.
 
-R packages are the standard for complicated R projects, and machine learning model training and execution certainly meets that criteria. With packages, we gain access to the comprehensive `R CMD CHECK`, as well as `testthat` unit tests and `roxygen2` documentation.
+R packages are the standard for complicated R projects. With packages, we gain access to the comprehensive `R CMD CHECK`, as well as `testthat` unit tests and `roxygen2` documentation. I'm certainly not the first to combine drake with a package workflow, but I wanted to have a single repository that combines all elements of a machine learning project.
 
-I intend for this repository to serve as a template for my future machine learning projects.
+This template uses a simple random forest sentiment analysis model, based on [labelled data available from the UCI machine learning repository](https://archive.ics.uci.edu/ml/datasets/Sentiment+Labelled+Sentences). Drake takes care of the data caching for us. This means that we can, say, adjust the hyper-parameters of our model and rerun the training plan, and only the modelling step and onward will be rerun.
 
-This template uses a simple random forest sentiment analysis model, based on [labelled data available from the UCI machine learning repository](https://archive.ics.uci.edu/ml/datasets/Sentiment+Labelled+Sentences). Drake takes care of the data caching for us. This means that we can, say, adjust the hyperparameters of our model and rerun the training plan, and only the modelling step and onwards will be rerun.
-
-This template considers machine learning workflows intended to be executed in batch --- for models that run as APIs, consider using `plumber`.
+This template considers machine learning workflows intended to be executed in batch --- for models that run as APIs, consider using `plumber` instead.
 
 ## Training and execution
 
@@ -54,9 +52,9 @@ drake::make(model_execution_plan())
 
 ![](inst/img/drake-model-execution-plan.png)
 
-Model artefacts --- the random forest model, the vectoriser, and the tfidf weightings --- are saved to and loaded from the `inst/artefacts/` directory. This is an arbitrary choice. We could just as easily use a different directory or remote storage.
+Model artefacts --- the random forest model, the vectoriser, and the tfidf weightings --- are saved to and loaded from the `artefacts/` directory. This is an arbitrary choice. We could just as easily use a different directory or remote storage.
 
-Predictions are "submitted" through the `submit_prediction()` function. This function does nothing except sleep for 5 seconds. In practice we would submit model output wherever it needs to go --- locally, a cloud service, etc.
+I've simulated a production step with a `new_data_to_be_scored` function that returns a few reviews to be scored. Predictions are "submitted" through the `submit_prediction()` function. This function does nothing except sleep for 5 seconds. In practice we would submit model output wherever it needs to go --- locally, a cloud service, etc. It's hard to "productionise" a model when it's just a toy.
 
 The exploratory data analysis piece can be found in the `inst/eda/` directory. It is compiled with `knitr`.
 
@@ -64,7 +62,36 @@ The exploratory data analysis piece can be found in the `inst/eda/` directory. I
 
 Both training and execution plans include a _verification_ step. These are functions that --- using the `assertthat` package --- ensure certain basic facts about the model and its predictions are true. If any of these assertions is false, an error is returned.
 
-The model artefacts and predictions cannot be exported without passing this verification step. Their relevant drake targets are triggered by a change in the md5 hash produced by the verification functions --- a hash that is not produced if an assertion fails.
+```
+validate_model <- function(random_forest, vectoriser, tfidf = NULL) {
+  model_sentiment <- function(x) sentiment(x, random_forest, vectoriser, tfidf)
+  oob <- random_forest$err.rate[random_forest$ntree, "OOB"] # out of bag error
+
+  assertthat::assert_that(model_sentiment("love") == "good")
+  assertthat::assert_that(model_sentiment("bad") == "bad")
+  assertthat::assert_that(oob < 0.4)
+
+  TRUE
+}
+```
+
+The model artefacts and predictions cannot be exported without passing this verification step. Their relevant drake targets are conditioned on the validation function returning `TRUE`:
+
+```
+output_model = drake::target(
+  {
+    dir.create("artefacts", showWarnings = FALSE)
+    readr::write_rds(vectoriser, file_out("artefacts/vectoriser.rds"))
+    readr::write_rds(tfidf, file_out("artefacts/tfidf.rds"))
+    readr::write_rds(review_rf, file_out("artefacts/review_rf.rds"))
+  },
+  trigger = drake::trigger(condition = validation, mode = "blacklist")
+)
+```
+
+For example, suppose I changed the assertion above to demand that my model must have an out-of-bag error of less than 0.01% before it can be exported. My model isn't very good, however, so that step will error. The execution steps are dependent on that validation, and so they won't be run.
+
+![](inst/img/failed-validation.png)
 
 The assertions I've included here are very basic. However, I think these steps of the plans are important and extensible. We could assert that a model:
 
@@ -77,4 +104,3 @@ We could also assert that predictions of new data:
 * are sensible.
 * do not contain sensitive data.
 * are not biased against particular groups.
-
