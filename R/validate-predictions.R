@@ -9,7 +9,6 @@
 #' @param predictions A vector of model predictions
 #'
 #' @return The MD5 hash of the predictions
-#' @importFrom assertthat assert_that
 #' @export
 #'
 validate_predictions <- function(predictions) {

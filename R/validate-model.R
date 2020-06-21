@@ -13,16 +13,15 @@
 #' If no tfidf is NULL, then weighting will not be applied.
 #'
 #' @return The MD5 hash of the random_forest object
-#' @importFrom assertthat assert_that
 #' @export
 #'
 validate_model <- function(random_forest, vectoriser, tfidf = NULL) {
   model_sentiment <- function(x) sentiment(x, random_forest, vectoriser, tfidf)
   oob <- random_forest$err.rate[random_forest$ntree, "OOB"]
 
-  assert_that(model_sentiment("love") == "good")
-  assert_that(model_sentiment("bad") == "bad")
-  assert_that(oob < 0.4)
+  assertthat::assert_that(model_sentiment("love") == "good")
+  assertthat::assert_that(model_sentiment("bad") == "bad")
+  assertthat::assert_that(oob < 0.4)
 
   TRUE
 }
